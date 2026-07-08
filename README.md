@@ -5,6 +5,7 @@
 Aplikasi manajemen laundry berbasis Flutter sebagai frontend dan Golang sebagai backend REST API.
 
 Aplikasi memiliki fitur:
+
 - Login Authentication
 - Dashboard
 - Manajemen transaksi laundry
@@ -49,39 +50,24 @@ Aplikasi memiliki fitur:
 
 # Struktur Project
 
-
-
 technical-assessment
 
 ├── frontend
-│
 │ ├── lib
-│ │
 │ │ ├── providers
-│ │ │
 │ │ ├── screens
-│ │ │
 │ │ ├── services
-│ │ │
 │ │ └── main.dart
 │ │
 │ └── pubspec.yaml
 │
-│
 ├── backend
-│
 │ ├── controllers
-│ │
 │ ├── models
-│ │
 │ ├── routes
-│ │
 │ ├── config
-│ │
 │ ├── migrations
-│ │
 │ └── main.go
-│
 │
 ├── database
 │
@@ -175,29 +161,14 @@ Request:
     "password": "123456"
 }
 Get All Orders
-
-Method:
-
 GET /items
 Get Detail Order
-
-Method:
-
 GET /items/{id}
 Create Order
-
-Method:
-
 POST /items
 Update Order
-
-Method:
-
 PUT /items/{id}
 Delete Order
-
-Method:
-
 DELETE /items/{id}
 Database Design
 
@@ -234,13 +205,9 @@ Tambahkan screenshot aplikasi:
 docs/screenshots/
 
 ├── login.png
-
 ├── dashboard.png
-
 ├── transaksi.png
-
 └── detail.png
-
 API Testing
 
 API dapat diuji menggunakan:
@@ -254,7 +221,6 @@ Author
 
 Nama:
 
-sakila ananda putri
+Sakila Ananda Putri
 
-```powershell
-git add README.md
+
