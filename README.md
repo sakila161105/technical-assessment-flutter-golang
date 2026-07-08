@@ -247,6 +247,14 @@ docs/screenshots/
 ├── dashboard.png
 ├── transaksi.png
 └── detail.png
+
+# API Documentation
+
+API testing menggunakan Postman.
+
+Collection tersedia pada:
+
+docs/Postman_Collection.json
 Author
 
 Sakila Ananda Putri
