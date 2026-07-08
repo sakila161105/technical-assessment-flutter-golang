@@ -19,6 +19,7 @@ Aplikasi memiliki fitur:
 
 # Teknologi yang Digunakan
 
+
 ## Frontend
 
 - Flutter
@@ -50,6 +51,8 @@ Aplikasi memiliki fitur:
 
 # Struktur Project
 
+
+
 technical-assessment
 
 ├── frontend
@@ -65,13 +68,19 @@ technical-assessment
 │ ├── controllers
 │ ├── models
 │ ├── routes
-│ ├── config
-│ ├── migrations
+│ ├── middleware
+│ ├── database
 │ └── main.go
 │
-├── database
-│
 ├── docs
+│ ├── ERD_Laundry_Management_System.png
+│ ├── Postman_Collection.json
+│ └── screenshots
+│
+├── database
+│ ├── migration.sql
+│ ├── schema.sql
+│ └── seed.sql
 │
 └── README.md
 
@@ -83,7 +92,6 @@ technical-assessment
 
 
 ## Backend Golang
-
 
 Masuk folder backend:
 
@@ -98,7 +106,7 @@ Jalankan server:
 
 go run main.go
 
-Backend berjalan pada:
+Backend berjalan:
 
 http://localhost:8080
 Frontend Flutter
@@ -125,7 +133,7 @@ Password:
 123456
 Fitur Aplikasi
 Authentication
-Login menggunakan email dan password
+Login dengan email dan password
 JWT Authentication
 Logout
 Dashboard
@@ -137,70 +145,101 @@ Transaction Management
 
 CRUD transaksi:
 
-Create transaksi
-Read transaksi
-Update transaksi
-Delete transaksi
+Create
+Read
+Update
+Delete
 Fitur Tambahan
 Search transaksi
-Filter berdasarkan status
+Filter status
 Pagination
 Loading state
 Empty state
 API Documentation
+Authentication
 Login
 
-Method:
+POST
 
-POST /login
+/login
 
 Request:
 
 {
-    "email": "admin@gmail.com",
-    "password": "123456"
+  "email": "admin@gmail.com",
+  "password": "123456"
 }
+Order API
 Get All Orders
-GET /items
+
+GET
+
+/items
 Get Detail Order
-GET /items/{id}
+
+GET
+
+/items/{id}
 Create Order
-POST /items
+
+POST
+
+/items
 Update Order
-PUT /items/{id}
+
+PUT
+
+/items/{id}
 Delete Order
-DELETE /items/{id}
+
+DELETE
+
+/items/{id}
 Database Design
 
 Database menggunakan MySQL.
 
-Table users
+Entity Relationship Diagram (ERD)
+
+Table Users
 Field	Type
-id	bigint
-name	varchar
-email	varchar
-password	varchar
-Table orders
+id	BIGINT
+name	VARCHAR
+email	VARCHAR
+password	VARCHAR
+role	VARCHAR
+created_at	TIMESTAMP
+updated_at	TIMESTAMP
+Table Orders
 Field	Type
-id	bigint
-code	varchar
-customer	varchar
-service	varchar
-price	integer
-status	varchar
-payment	varchar
-created_at	timestamp
+id	BIGINT
+code	VARCHAR
+customer	VARCHAR
+service	VARCHAR
+price	INT
+status	VARCHAR
+payment	VARCHAR
+estimate	VARCHAR
+service_count	VARCHAR
+created_at	TIMESTAMP
+updated_at	TIMESTAMP
 Security Implementation
-
-Implementasi keamanan:
-
 JWT Authentication
 Password hashing menggunakan bcrypt
 Input validation
-CORS configuration
+CORS Configuration
+API Testing
+
+Menggunakan:
+
+Postman
+
+File:
+
+docs/Postman_Collection.json
 Screenshot
 
-Tambahkan screenshot aplikasi:
+Dokumentasi tampilan aplikasi:
 
 docs/screenshots/
 
@@ -208,19 +247,6 @@ docs/screenshots/
 ├── dashboard.png
 ├── transaksi.png
 └── detail.png
-API Testing
-
-API dapat diuji menggunakan:
-
-Postman
-
-Collection:
-
-docs/Postman_Collection.json
 Author
 
-Nama:
-
 Sakila Ananda Putri
-
-
