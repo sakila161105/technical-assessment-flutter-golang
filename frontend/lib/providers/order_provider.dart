@@ -26,6 +26,10 @@ class OrderProvider extends ChangeNotifier {
 
   String selectedStatus = "Semua";
 
+  DateTime? startDate;
+
+  DateTime? endDate;
+
   // =========================
   // PAGINATION
   // =========================
@@ -35,7 +39,7 @@ class OrderProvider extends ChangeNotifier {
   final int perPage = 5;
 
   // =================================================
-  // GET ALL ORDER DARI GOLANG
+  // GET ALL ORDER
   // GET /items
   // =================================================
 
@@ -82,7 +86,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   // =================================================
-  // GET DETAIL ORDER
+  // DETAIL ORDER
   // GET /items/:id
   // =================================================
 
@@ -115,7 +119,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   // =================================================
-  // CREATE ORDER
+  // CREATE
   // POST /items
   // =================================================
 
@@ -134,10 +138,6 @@ class OrderProvider extends ChangeNotifier {
 
     return false;
   }
-
-  // =================================================
-  // ADD ORDER UNTUK FORM LAMA
-  // =================================================
 
   Future<bool> addOrder(
     String customer,
@@ -172,7 +172,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   // =================================================
-  // UPDATE ORDER
+  // UPDATE
   // PUT /items/:id
   // =================================================
 
@@ -193,7 +193,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   // =================================================
-  // DELETE ORDER
+  // DELETE
   // DELETE /items/:id
   // =================================================
 
@@ -216,7 +216,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   // =================================================
-  // FILTER SEARCH
+  // FILTER
   // =================================================
 
   List<Map<String, dynamic>> get filteredOrders {
@@ -235,8 +235,22 @@ class OrderProvider extends ChangeNotifier {
       final matchStatus =
           selectedStatus == "Semua" || order["status"] == selectedStatus;
 
-      return matchSearch && matchStatus;
+      final matchDate = startDate == null || checkDate(order["date"]);
+
+      return matchSearch && matchStatus && matchDate;
     }).toList();
+  }
+
+  bool checkDate(String value) {
+    try {
+      final date = DateTime.parse(value);
+
+      return date.year == startDate!.year &&
+          date.month == startDate!.month &&
+          date.day == startDate!.day;
+    } catch (e) {
+      return false;
+    }
   }
 
   // =================================================
@@ -287,7 +301,7 @@ class OrderProvider extends ChangeNotifier {
   int get totalSelesai => _orders.where((e) => e["status"] == "Selesai").length;
 
   // =================================================
-  // SEARCH FILTER
+  // ACTION FILTER
   // =================================================
 
   void searchOrder(String value) {
@@ -300,6 +314,16 @@ class OrderProvider extends ChangeNotifier {
 
   void filterStatus(String value) {
     selectedStatus = value;
+
+    currentPage = 1;
+
+    notifyListeners();
+  }
+
+  void filterDate(DateTime start, DateTime end) {
+    startDate = start;
+
+    endDate = end;
 
     currentPage = 1;
 

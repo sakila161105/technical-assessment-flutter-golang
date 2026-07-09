@@ -5,344 +5,990 @@ import '../providers/order_provider.dart';
 import 'form_order_screen.dart';
 import 'detail_order_screen.dart';
 
+
 class TransaksiScreen extends StatefulWidget {
+
   const TransaksiScreen({super.key});
 
+
   @override
-  State<TransaksiScreen> createState() => _TransaksiScreenState();
+  State<TransaksiScreen> createState() =>
+      _TransaksiScreenState();
+
 }
+
+
 
 class _TransaksiScreenState extends State<TransaksiScreen> {
-  static const Color primaryRed = Color(0xffd50000);
+
+
+  static const Color primaryRed =
+  Color(0xffd50000);
+
+
 
   @override
-  void initState() {
+  void initState(){
+
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<OrderProvider>().fetchOrders();
+
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) {
+
+      context
+          .read<OrderProvider>()
+          .fetchOrders();
+
     });
+
   }
 
+
+
+
+
   @override
-  Widget build(BuildContext context) {
-    final provider = context.watch<OrderProvider>();
+  Widget build(BuildContext context){
+
+
+    final provider =
+    context.watch<OrderProvider>();
+
+
 
     return Scaffold(
-      backgroundColor: const Color(0xfff3f3f3),
 
-      appBar: AppBar(
-        backgroundColor: primaryRed,
 
-        foregroundColor: Colors.white,
+      backgroundColor:
+      const Color(0xfff3f3f3),
 
-        title: const Text(
+
+
+      appBar:
+
+      AppBar(
+
+        backgroundColor:
+        primaryRed,
+
+
+        foregroundColor:
+        Colors.white,
+
+
+        title:
+
+        const Text(
+
           "Transaksi Outlet",
 
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style:
+
+          TextStyle(
+
+            fontWeight:
+            FontWeight.bold,
+
+          ),
+
         ),
+
+
       ),
 
-      body: provider.loading
-          ? _loadingState()
-          : Column(
-              children: [
-                _searchBox(provider),
 
-                _filterStatus(provider),
 
-                _summary(provider),
 
-                Expanded(
-                  child: provider.orders.isEmpty
-                      ? _emptyState()
-                      : ListView.builder(
-                          padding: const EdgeInsets.all(14),
 
-                          itemCount: provider.orders.length,
+      body:
 
-                          itemBuilder: (context, index) {
-                            final order = provider.orders[index];
+      provider.loading
 
-                            return _OrderCard(order: order);
-                          },
-                        ),
-                ),
+      ?
 
-                if (provider.orders.isNotEmpty) _pagination(provider),
-              ],
-            ),
+      const Center(
 
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: primaryRed,
+        child:
 
-        foregroundColor: Colors.white,
+        CircularProgressIndicator(
 
-        icon: const Icon(Icons.add),
+          color:
+          primaryRed,
 
-        label: const Text("Tambah"),
-
-        onPressed: () {
-          Navigator.push(
-            context,
-
-            MaterialPageRoute(builder: (_) => const FormOrderScreen()),
-          ).then((_) {
-            context.read<OrderProvider>().fetchOrders();
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _loadingState() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-
-        children: [
-          CircularProgressIndicator(color: primaryRed),
-
-          SizedBox(height: 15),
-
-          Text(
-            "Mengambil data transaksi...",
-
-            style: TextStyle(color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _emptyState() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-
-        children: [
-          Icon(Icons.inbox_outlined, size: 60, color: Colors.grey),
-
-          SizedBox(height: 15),
-
-          Text(
-            "Belum ada transaksi",
-
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-
-          SizedBox(height: 5),
-
-          Text(
-            "Tambahkan transaksi baru",
-
-            style: TextStyle(color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _searchBox(OrderProvider provider) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
-
-      child: TextField(
-        onChanged: provider.searchOrder,
-
-        decoration: InputDecoration(
-          hintText: "Cari kode atau pelanggan...",
-
-          prefixIcon: const Icon(Icons.search),
-
-          filled: true,
-
-          fillColor: Colors.white,
-
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-
-            borderSide: BorderSide.none,
-          ),
         ),
-      ),
-    );
-  }
 
-  Widget _filterStatus(OrderProvider provider) {
-    final statusList = ["Semua", "Diterima", "Diproses", "Selesai"];
+      )
 
-    return SizedBox(
-      height: 45,
+      :
 
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
+      SingleChildScrollView(
 
-        padding: const EdgeInsets.symmetric(horizontal: 14),
 
-        itemCount: statusList.length,
+        child:
 
-        itemBuilder: (context, index) {
-          final status = statusList[index];
+        Column(
 
-          final selected = provider.selectedStatus == status;
+          children: [
 
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
 
-            child: ChoiceChip(
-              label: Text(status),
 
-              selected: selected,
+            _search(provider),
 
-              selectedColor: primaryRed,
 
-              labelStyle: TextStyle(
-                color: selected ? Colors.white : Colors.black,
+
+            _filter(provider),
+
+
+
+
+            _summary(provider),
+
+
+
+
+
+
+            provider.orders.isEmpty
+
+
+                ?
+
+
+            _empty()
+
+
+
+                :
+
+
+
+            ListView.builder(
+
+
+              shrinkWrap:
+              true,
+
+
+              physics:
+
+              const NeverScrollableScrollPhysics(),
+
+
+
+              padding:
+
+              const EdgeInsets.symmetric(
+                  horizontal:14
               ),
 
-              onSelected: (_) {
-                provider.filterStatus(status);
+
+
+              itemCount:
+
+              provider.orders.length,
+
+
+
+              itemBuilder:
+                  (context,index){
+
+
+                return OrderCard(
+
+                    order:
+                    provider.orders[index]
+
+                );
+
+
               },
+
+
             ),
-          );
-        },
-      ),
-    );
-  }
 
-  Widget _summary(OrderProvider provider) {
-    return Container(
-      margin: const EdgeInsets.all(14),
 
-      padding: const EdgeInsets.all(16),
 
-      decoration: BoxDecoration(
-        color: Colors.white,
 
-        borderRadius: BorderRadius.circular(18),
-      ),
 
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+            _pagination(provider),
 
-        children: [
-          _summaryItem("Total", provider.totalOrder),
 
-          _summaryItem("Proses", provider.totalDiproses),
 
-          _summaryItem("Selesai", provider.totalSelesai),
-        ],
-      ),
-    );
-  }
+            const SizedBox(
+              height:100,
+            ),
 
-  Widget _summaryItem(String title, int value) {
-    return Column(
-      children: [
-        Text(
-          value.toString(),
 
-          style: const TextStyle(
-            color: primaryRed,
 
-            fontSize: 20,
+          ],
 
-            fontWeight: FontWeight.bold,
-          ),
+
         ),
 
-        Text(title, style: const TextStyle(color: Colors.grey)),
-      ],
+
+      ),
+
+
+
+
+
+      floatingActionButton:
+
+      FloatingActionButton.extended(
+
+
+
+        backgroundColor:
+        primaryRed,
+
+
+        foregroundColor:
+        Colors.white,
+
+
+
+        icon:
+
+        const Icon(
+          Icons.add,
+        ),
+
+
+
+        label:
+
+        const Text(
+          "Tambah",
+        ),
+
+
+
+
+        onPressed: () async{
+
+
+          await Navigator.push(
+
+              context,
+
+
+              MaterialPageRoute(
+
+                  builder:(_)=>
+
+                  const FormOrderScreen()
+
+              )
+
+          );
+
+
+
+          provider.fetchOrders();
+
+
+
+        },
+
+
+      ),
+
+
     );
+
   }
 
-  Widget _pagination(OrderProvider provider) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
 
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+
+
+
+
+
+  Widget _search(OrderProvider provider){
+
+
+    return Padding(
+
+      padding:
+
+      const EdgeInsets.all(12),
+
+
+
+      child:
+
+      TextField(
+
+
+        onChanged:
+
+        provider.searchOrder,
+
+
+
+        decoration:
+
+        InputDecoration(
+
+
+          hintText:
+
+          "Cari kode atau pelanggan...",
+
+
+
+          prefixIcon:
+
+          const Icon(
+              Icons.search
+          ),
+
+
+
+          filled:
+
+          true,
+
+
+
+          fillColor:
+
+          Colors.white,
+
+
+
+          border:
+
+          OutlineInputBorder(
+
+            borderRadius:
+
+            BorderRadius.circular(15),
+
+
+            borderSide:
+
+            BorderSide.none,
+
+          ),
+
+
+        ),
+
+
+      ),
+
+
+    );
+
+
+  }
+
+
+
+
+
+
+
+  Widget _filter(OrderProvider provider){
+
+
+    final status=[
+
+      "Semua",
+
+      "Diterima",
+
+      "Diproses",
+
+      "Selesai",
+
+    ];
+
+
+
+    return SizedBox(
+
+
+      height:
+
+      40,
+
+
+
+      child:
+
+      ListView(
+
+        scrollDirection:
+
+        Axis.horizontal,
+
+
+
+        padding:
+
+        const EdgeInsets.symmetric(
+            horizontal:12
+        ),
+
+
 
         children: [
-          IconButton(
-            onPressed: provider.currentPage > 1 ? provider.previousPage : null,
 
-            icon: const Icon(Icons.chevron_left),
+
+
+          ...status.map((item){
+
+
+
+            final selected =
+
+            provider.selectedStatus ==
+                item;
+
+
+
+
+            return Padding(
+
+              padding:
+
+              const EdgeInsets.only(
+                  right:6
+              ),
+
+
+
+              child:
+
+              ChoiceChip(
+
+                label:
+
+                Text(
+
+                  item,
+
+                  style:
+
+                  const TextStyle(
+                    fontSize:12,
+                  ),
+
+                ),
+
+
+
+                selected:
+
+                selected,
+
+
+
+                selectedColor:
+
+                primaryRed,
+
+
+
+                labelStyle:
+
+                TextStyle(
+
+                  color:
+
+                  selected
+
+                      ?
+
+                  Colors.white
+
+                      :
+
+                  Colors.black,
+
+                ),
+
+
+
+                onSelected:(_){
+
+                  provider.filterStatus(
+                      item
+                  );
+
+                },
+
+
+              ),
+
+
+            );
+
+
+          }),
+
+
+
+
+          ActionChip(
+
+            avatar:
+
+            const Icon(
+
+              Icons.calendar_month,
+
+              size:16,
+
+            ),
+
+
+
+            label:
+
+            Text(
+
+              provider.startDate == null
+
+                  ?
+
+              "Tanggal"
+
+                  :
+
+              "${provider.startDate!.day}/"
+                  "${provider.startDate!.month}",
+
+
+
+              style:
+
+              const TextStyle(
+                  fontSize:12
+              ),
+
+            ),
+
+
+
+            onPressed:() async{
+
+
+              final date =
+
+              await showDatePicker(
+
+                context:
+                context,
+
+
+                initialDate:
+                DateTime.now(),
+
+
+                firstDate:
+                DateTime(2024),
+
+
+                lastDate:
+                DateTime(2030),
+
+
+              );
+
+
+
+              if(date != null){
+
+
+                provider.filterDate(
+                    date,
+                    date
+                );
+
+
+              }
+
+
+            },
+
+
           ),
 
-          Text(
-            "${provider.currentPage}/${provider.totalPages}",
 
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-
-          IconButton(
-            onPressed: provider.currentPage < provider.totalPages
-                ? provider.nextPage
-                : null,
-
-            icon: const Icon(Icons.chevron_right),
-          ),
         ],
+
+
       ),
+
+
     );
+
+
   }
+
+
+
+
+
+
+
+  Widget _summary(OrderProvider provider){
+
+
+    return Container(
+
+
+      margin:
+
+      const EdgeInsets.all(12),
+
+
+
+      padding:
+
+      const EdgeInsets.all(15),
+
+
+
+      decoration:
+
+      BoxDecoration(
+
+        color:
+
+        Colors.white,
+
+
+        borderRadius:
+
+        BorderRadius.circular(18),
+
+      ),
+
+
+
+      child:
+
+      Row(
+
+        mainAxisAlignment:
+
+        MainAxisAlignment.spaceAround,
+
+
+        children: [
+
+
+          _item(
+              "Total",
+              provider.totalOrder
+          ),
+
+
+          _item(
+              "Proses",
+              provider.totalDiproses
+          ),
+
+
+          _item(
+              "Selesai",
+              provider.totalSelesai
+          ),
+
+
+        ],
+
+      ),
+
+
+    );
+
+
+  }
+
+
+
+
+
+  Widget _item(String title,int value){
+
+
+    return Column(
+
+      children:[
+
+
+        Text(
+
+          "$value",
+
+          style:
+
+          const TextStyle(
+
+            color:
+            primaryRed,
+
+
+            fontWeight:
+            FontWeight.bold,
+
+
+            fontSize:
+            20,
+
+          ),
+
+        ),
+
+
+
+        Text(title),
+
+
+      ],
+
+    );
+
+
+  }
+
+
+
+
+
+
+  Widget _empty(){
+
+
+    return const Padding(
+
+      padding:
+      EdgeInsets.all(40),
+
+
+      child:
+
+      Text(
+        "Belum ada transaksi",
+      ),
+
+    );
+
+
+  }
+
+
+
+
+
+
+
+  Widget _pagination(OrderProvider provider){
+
+
+    return Row(
+
+      mainAxisAlignment:
+
+      MainAxisAlignment.center,
+
+
+      children: [
+
+
+        IconButton(
+
+          onPressed:
+
+          provider.currentPage > 1
+
+              ?
+
+          provider.previousPage
+
+              :
+
+          null,
+
+
+          icon:
+
+          const Icon(
+              Icons.chevron_left
+          ),
+
+        ),
+
+
+
+        Text(
+
+          "${provider.currentPage}/${provider.totalPages}",
+
+        ),
+
+
+
+        IconButton(
+
+          onPressed:
+
+          provider.currentPage <
+              provider.totalPages
+
+              ?
+
+          provider.nextPage
+
+              :
+
+          null,
+
+
+          icon:
+
+          const Icon(
+              Icons.chevron_right
+          ),
+
+        ),
+
+
+      ],
+
+    );
+
+
+  }
+
 }
 
-// ===============================
-// CARD TRANSAKSI
-// ===============================
 
-class _OrderCard extends StatelessWidget {
-  final Map<String, dynamic> order;
 
-  const _OrderCard({required this.order});
 
-  static const Color primaryRed = Color(0xffd50000);
+
+
+class OrderCard extends StatelessWidget {
+
+
+  final Map<String,dynamic> order;
+
+
+  const OrderCard({
+
+    super.key,
+
+    required this.order,
+
+  });
+
+
+
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
+
+
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
 
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      margin:
 
-      child: ListTile(
-        onTap: () {
+      const EdgeInsets.only(
+          bottom:12
+      ),
+
+
+      child:
+
+      ListTile(
+
+
+        onTap:(){
+
+
           Navigator.push(
-            context,
 
-            MaterialPageRoute(builder: (_) => DetailOrderScreen(order: order)),
+              context,
+
+              MaterialPageRoute(
+
+                  builder:(_)=>
+
+                  DetailOrderScreen(
+
+                      order:order
+
+                  )
+
+              )
+
           );
+
+
         },
 
-        leading: CircleAvatar(
-          backgroundColor: Colors.red.shade50,
 
-          child: const Icon(Icons.receipt_long, color: primaryRed),
+
+        leading:
+
+        const Icon(
+            Icons.receipt_long,
+            color:Colors.red
         ),
 
-        title: Text(
-          order["code"] ?? "-",
 
-          style: const TextStyle(fontWeight: FontWeight.bold),
+
+        title:
+
+        Text(
+            order["customer"] ?? "-"
         ),
 
-        subtitle: Text(
-          "${order["customer"] ?? "-"}\n${order["service"] ?? "-"}",
+
+
+        subtitle:
+
+        Text(
+
+          "${order["service"] ?? "-"}\n"
+              "${order["date"] ?? "-"}",
+
         ),
 
-        trailing: Text(
+
+
+        trailing:
+
+        Text(
+
           "Rp ${order["price"] ?? 0}",
 
-          style: const TextStyle(
-            color: primaryRed,
+          style:
 
-            fontWeight: FontWeight.bold,
+          const TextStyle(
+
+              color:Colors.red,
+
+              fontWeight:
+              FontWeight.bold
+
           ),
+
         ),
+
+
       ),
+
     );
+
+
   }
+
+
 }
